@@ -81,6 +81,13 @@ h1 {
     font-size: 33px;
 }
 
+.deck .card.incorrect {
+    cursor: default;
+    background:#ff6961;
+    font-size: 33px;
+}
+
+
 /*
  * Styles for the Score Panel
  */
@@ -106,4 +113,8 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.score-panel .moves {
+    display: inline-block;
 }
