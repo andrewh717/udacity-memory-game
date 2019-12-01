@@ -1,10 +1,11 @@
 // inital setup
+let matchedPairs = 0;
 let moves = 0;
+let stars = 3;
 let moveCounter = document.getElementById('move-counter');
 moveCounter.innerText = moves.toString();
 
 initCardListener();
-
 
 /*
  * Create a list that holds all of your cards
@@ -76,18 +77,13 @@ function initCardListener() {
 			if (openCards.length < 2) {
 				card.classList.add('open', 'show');
 				openCards.push(card);
-				console.log('Opening card:');
-				console.log(card);
-				// Check for match
 				if (openCards.length == 2) {
 					setTimeout(function() {
 						checkMatch(openCards);
 						incrementMove();
 						openCards = [];
-					}, 1000);
+					}, 100);
 				}
-			} else {
-
 			}
 		});
 	});
@@ -95,16 +91,18 @@ function initCardListener() {
 
 function checkMatch(openCards) {
 	if (openCards[0].isEqualNode(openCards[1]) && !openCards[0].isSameNode(openCards[1])) {
-		console.log('match found');
+		// Match found
 		openCards.forEach(card => {
-			card.classList.remove('open', 'show');
-			card.classList.add('match');
+			handleMatch(card);
 		});
+		matchedPairs++;
+		if (matchedPairs == 8) {
+			winner();
+		}
 	} else {
-		console.log('not a match');
+		// Not a match
 		openCards.forEach(card => {
-			card.classList.remove('open', 'show');
-			// Change style to incorrect
+			handleIncorrect(card);
 		});
 	}
 }
@@ -112,4 +110,46 @@ function checkMatch(openCards) {
 function incrementMove() {
 	moves++;
 	moveCounter.innerText = moves.toString();
+	if (moves > 10) {
+		if (moves <= 15) {
+			stars = 2;
+			removeStar(3);
+		} else if (moves <= 20) {
+			stars = 1;
+			removeStar(2);
+		} else {
+			stars = 0;
+			removeStar(1);
+		}
+	}
+}
+
+function removeStar(num) {
+	let star = document.getElementById('star' + num);
+	star.classList.remove('fa-star');
+	star.classList.add('fa-star-o');
+}
+
+function handleMatch(card) {
+	card.classList.remove('open', 'show');
+	card.classList.add('match');
+}
+
+function handleIncorrect(card) {
+	card.classList.remove('open', 'show');
+	card.classList.add('incorrect');
+	setTimeout(function() {
+		card.classList.remove('incorrect');
+	}, 700);
+}
+
+function winner() {
+	let game = document.getElementById('game');
+	let win = document.getElementById('winner-screen');
+	let winMoves = document.getElementById('win-moves');
+	let winStars = document.getElementById('win-stars');
+	game.style.display = 'none';
+	win.style.display = 'flex';
+	winMoves.innerText = moves;
+	winStars.innerText = stars;
 }

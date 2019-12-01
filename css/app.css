@@ -118,3 +118,17 @@ h1 {
 .score-panel .moves {
     display: inline-block;
 }
+
+#winner-screen {
+    display: none;
+    font-size: 33px;
+}
+
+#winner-text {
+    max-width: 50%;
+    text-align: center;
+}
+
+#winner-icon {
+    font-size: 100px;
+}
