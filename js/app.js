@@ -3,24 +3,36 @@ let matchedPairs = 0;
 let moves = 0;
 let stars = 3;
 let moveCounter = document.getElementById('move-counter');
-moveCounter.innerText = moves.toString();
+let game = document.getElementById('game');
+let win = document.getElementById('winner-screen');
+let winMoves = document.getElementById('win-moves');
+let winStars = document.getElementById('win-stars');
+initGame();
 
-initCardListener();
+
+// Starts the game
+function initGame() {
+	matchedPairs = 0;
+	moves = 0;
+	stars = 3;
+	moveCounter.innerText = moves.toString();
+	displayCards();
+	initCardListener();
+}
 
 /*
  * Create a list that holds all of your cards
  */
 function createDeck() {
 	let deck = new Array(16);
-	let symbols = ['anchor', 'bicycle', 'bolt', 'bomb', 'cube', 'diamond', 'leaf', 'paper-plane'];
+	let symbols = ['anchor', 'bicycle', 'bolt', 'bomb', 'cube', 'diamond', 'leaf', 'paper-plane-o'];
 	let j = 0;
 	for (let i = 0; i < deck.length; i++) {
-		if (j % 2 == 0) {
+		if (i > 0 && i % 2 == 0) {
 			j++;
 		}
 		deck[i] = {
-			symbol: symbols[j],
-			flipped: 'false'
+			symbol: symbols[j]
 		}
 	}
 	return deck;
@@ -37,8 +49,11 @@ function displayCards() {
 	let list = document.getElementById('deck');
 	deck.forEach(card => {
 		let item = document.createElement('li');
+		let symbol = document.createElement('i');
 		item.classList.add('card');
-
+		symbol.classList.add('fa', 'fa-' + card.symbol);
+		item.appendChild(symbol);
+		list.appendChild(item);
 	});
 }
 
@@ -74,15 +89,17 @@ function initCardListener() {
 	let openCards = [];
 	cards.forEach(card => {
 		card.addEventListener('click', function (event) {
-			if (openCards.length < 2) {
-				card.classList.add('open', 'show');
-				openCards.push(card);
-				if (openCards.length == 2) {
-					setTimeout(function() {
-						checkMatch(openCards);
-						incrementMove();
-						openCards = [];
-					}, 100);
+			if (card.classList.value === 'card') {
+				if (openCards.length < 2) {
+					card.classList.add('open', 'show');
+					openCards.push(card);
+					if (openCards.length == 2) {
+						setTimeout(function() {
+							checkMatch(openCards);
+							incrementMove();
+							openCards = [];
+						}, 100);
+					}
 				}
 			}
 		});
@@ -144,12 +161,33 @@ function handleIncorrect(card) {
 }
 
 function winner() {
-	let game = document.getElementById('game');
-	let win = document.getElementById('winner-screen');
-	let winMoves = document.getElementById('win-moves');
-	let winStars = document.getElementById('win-stars');
 	game.style.display = 'none';
 	win.style.display = 'flex';
 	winMoves.innerText = moves;
 	winStars.innerText = stars;
+}
+
+function resetDeck() {
+	document.getElementById('deck').innerHTML = '';
+}
+
+function resetStars() {
+	let starsList = document.getElementById('starsList');
+	starsList.innerHTML = '';
+	for (let i = 1; i < 4; i++) {
+		let star = document.createElement('li');
+		let starSymbol = document.createElement('i');
+		starSymbol.classList.add('fa', 'fa-star');
+		starSymbol.id = 'star'+ i;
+		star.appendChild(starSymbol);
+		starsList.appendChild(star);
+	}
+}
+
+function restartGame() {
+	game.style.display = 'flex';
+	win.style.display = 'none';
+	resetDeck();
+	resetStars();
+	initGame();
 }
