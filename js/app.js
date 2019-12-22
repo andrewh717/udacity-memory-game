@@ -1,7 +1,8 @@
 // inital setup
-let matchedPairs = 0;
+let timer;
 let moves = 0;
 let stars = 3;
+let matchedPairs = 0;
 let moveCounter = document.getElementById('move-counter');
 let game = document.getElementById('game');
 let win = document.getElementById('winner-screen');
@@ -106,6 +107,7 @@ function initCardListener() {
 	});
 }
 
+// Function to check if the open cards are a match
 function checkMatch(openCards) {
 	if (openCards[0].isEqualNode(openCards[1]) && !openCards[0].isSameNode(openCards[1])) {
 		// Match found
@@ -134,10 +136,12 @@ function incrementMove() {
 		} else if (moves <= 20) {
 			stars = 1;
 			removeStar(2);
-		} else {
-			stars = 0;
-			removeStar(1);
 		}
+		// Commenting out the 0 star rating since rubric says only go down to 1 star
+		// } else {
+		// 	stars = 0;
+		// 	removeStar(1);
+		// }
 	}
 }
 
