@@ -138,6 +138,7 @@ function removeStar(num) {
   star.classList.add('fa-star-o');
 }
 
+// Increments the move counter and adjusts star rating accordingly
 function incrementMove() {
   moves++;
   moveCounter.innerText = moves.toString();
