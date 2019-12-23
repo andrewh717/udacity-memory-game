@@ -206,6 +206,7 @@ function format(t, scale, mod, padding) {
   return t.toString().padStart(padding, 0);
 }
 
+// Timer function from https://stackoverflow.com/a/53000727
 function displayTimer() {
   const timer = gameOver ? time : Date.now() + time;
   document.getElementById('minutes').textContent = format(timer, 60000, 60, 2);
