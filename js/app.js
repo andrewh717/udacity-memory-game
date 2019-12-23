@@ -8,9 +8,8 @@ let moves;
 let stars;
 let openCards;
 let matchedPairs;
-let startTime;
-let endTime;
 let time;
+let gameOver;
 const moveCounter = document.getElementById('move-counter');
 const game = document.getElementById('game');
 const win = document.getElementById('winner-screen');
@@ -22,14 +21,16 @@ initGame();
 
 // Starts the game
 function initGame() {
-  matchedPairs = 0;
   moves = 0;
   stars = 3;
   openCards = [];
+  matchedPairs = 0;
+  gameOver = false;
   moveCounter.innerText = moves.toString();
   displayCards();
   initCardListener();
-  startTime = performance.now();
+  time = -Date.now();
+  displayTimer();
 }
 
 /*
@@ -100,8 +101,11 @@ function handleIncorrect(card) {
 }
 
 function winner() {
-  endTime = performance.now();
-  time = (endTime - startTime) / 1000;
+  gameOver = true;
+  const minutes = document.getElementById('minutes').textContent;
+  const seconds = document.getElementById('seconds').textContent;
+  const ms = document.getElementById('ms').textContent;
+  time = `${minutes}:${seconds}:${ms}`;
   game.style.display = 'none';
   win.style.display = 'flex';
   winMoves.innerText = moves;
@@ -137,10 +141,10 @@ function removeStar(num) {
 function incrementMove() {
   moves++;
   moveCounter.innerText = moves.toString();
-  if (moves > 11 && moves <= 15) {
+  if (moves > 12 && moves <= 20) {
     stars = 2;
     removeStar(3);
-  } else if (moves > 15 && moves <= 20) {
+  } else if (moves > 20) {
     stars = 1;
     removeStar(2);
   }
@@ -190,7 +194,23 @@ function resetStars() {
 function restartGame() {
   game.style.display = 'flex';
   win.style.display = 'none';
+  gameOver = true;
   resetDeck();
   resetStars();
   initGame();
+}
+
+function format(t, scale, mod, padding) {
+  t = Math.floor(t / scale) % mod;
+  return t.toString().padStart(padding, 0);
+}
+
+function displayTimer() {
+  const timer = gameOver ? time : Date.now() + time;
+  document.getElementById('minutes').textContent = format(timer, 60000, 60, 2);
+  document.getElementById('seconds').textContent = format(timer, 1000, 60, 2);
+  document.getElementById('ms').textContent = format(timer, 1, 1000, 3);
+  if (!gameOver) {
+    requestAnimationFrame(displayTimer);
+  }
 }

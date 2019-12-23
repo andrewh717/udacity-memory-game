@@ -119,6 +119,11 @@ h1 {
     display: inline-block;
 }
 
+.score-panel .timer {
+    display: inline-block;
+    margin-left: 50px;
+}
+
 #winner-screen {
     display: none;
     font-size: 33px;
